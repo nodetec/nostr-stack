@@ -14,7 +14,15 @@ This repo uses node 18 (LTS) and [pnpm workspaces](https://pnpm.io/workspaces)
 
 - Clone this repo
 - Install Dependencies `pnpm install`
+- Build packages `pnpm build`
 - You're good to go!
+
+You can play around by running one of the playgrounds. For example:
+
+```
+cd playground/svelte
+pnpm dev
+```
 
 ## Testing
 
