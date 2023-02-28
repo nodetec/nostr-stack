@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { getUserProfile, setProfile, verifyNip05 } from "./profile";
+import { getProfile, setProfile, verifyNip05 } from "./profile";
 import { createPool } from "../relay";
 import { generatePrivateKey, getPublicKey, nip19 } from "nostr-tools";
 
@@ -9,7 +9,7 @@ describe("package: profile", () => {
   it("should set a users profile", async () => {
     const relayPool = createPool(["ws://localhost:8080"]);
     await setProfile({ pubkey: getPublicKey(sk), name: "test" }, sk, relayPool);
-    const profile = await getUserProfile(getPublicKey(sk), relayPool);
+    const profile = await getProfile(getPublicKey(sk), relayPool);
     expect(profile?.name).toBe("test");
   });
 
@@ -20,7 +20,7 @@ describe("package: profile", () => {
       sk,
       relayPool
     );
-    const profile = await getUserProfile(getPublicKey(sk), relayPool);
+    const profile = await getProfile(getPublicKey(sk), relayPool);
     expect(profile?.nip05).toBe("test@example.com");
   });
 

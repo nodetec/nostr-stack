@@ -2,22 +2,37 @@
   "name": "@nostr-stack/core",
   "private": true,
   "version": "1.0.0",
+  "type": "module",
   "description": "",
-  "main": "index.js",
+  "files": [
+    "dist"
+  ],
+  "main": "dist/core.umd.cjs",
+  "module": "dist/core.js",
+  "typings": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/core.js",
+      "require": "./dist/core.umd.cjs"
+    }
+  },
   "scripts": {
-    "test": "vitest"
+    "test": "vitest",
+    "build": "vite build",
+    "format": "prettier --write ."
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "date-fns": "^2.29.3",
-    "nostr-tools": "^1.7.1",
-    "vite": "^4.1.4",
-    "vitest": "^0.29.1",
-    "isomorphic-fetch": "^3.0.0"
+    "isomorphic-fetch": "^3.0.0",
+    "nostr-tools": "^1.7.1"
   },
   "devDependencies": {
-    "@types/isomorphic-fetch": "^0.0.36"
+    "@types/isomorphic-fetch": "^0.0.36",
+    "vite": "^4.1.4",
+    "vite-plugin-dts": "^2.0.2",
+    "vitest": "^0.29.1"
   }
 }

@@ -4,7 +4,6 @@ import {
   type Event,
   type Filter,
   type SubscriptionOptions,
-  Pub,
 } from "nostr-tools";
 
 export interface Pool {

@@ -1,1 +1,1 @@
-export { createPool, Pool } from "./relay";
+export { createPool, type Pool } from "./relay";
