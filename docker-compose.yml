@@ -1,12 +1,12 @@
-version: '3'
+version: "3"
 services:
   relay:
     container_name: relay
     image: scsibug/nostr-rs-relay
-    volumes: 
+    volumes:
       - nostr-relay:/usr/src/app/db
     ports:
       - "8080:8080"
-    
+
 volumes:
   nostr-relay: {}

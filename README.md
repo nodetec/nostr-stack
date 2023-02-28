@@ -19,3 +19,13 @@ This repo uses node 18 (LTS) and [pnpm workspaces](https://pnpm.io/workspaces)
 ## Testing
 
 [Vitest](https://vitest.dev/)
+
+Out of the box, this will expect a relay to be running at `ws://localhost:8080`. This can be easily spun up with `docker` by running
+
+```
+docker compose up -d relay
+```
+
+at the root of this repo.
+
+This is less than ideal, but it's easier than mocking for now.

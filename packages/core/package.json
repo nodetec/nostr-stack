@@ -5,12 +5,19 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "vitest"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "nostr-tools": "^1.7.1"
+    "date-fns": "^2.29.3",
+    "nostr-tools": "^1.7.1",
+    "vite": "^4.1.4",
+    "vitest": "^0.29.1",
+    "isomorphic-fetch": "^3.0.0"
+  },
+  "devDependencies": {
+    "@types/isomorphic-fetch": "^0.0.36"
   }
 }
