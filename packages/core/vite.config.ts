@@ -12,6 +12,7 @@ export default defineConfig({
       formats: ["es", "cjs"],
     },
     rollupOptions: {},
+    sourcemap: "inline",
   },
   plugins: [dts()],
   test: {

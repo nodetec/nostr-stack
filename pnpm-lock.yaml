@@ -19,8 +19,10 @@ importers:
   packages/core:
     specifiers:
       '@types/isomorphic-fetch': ^0.0.36
+      '@types/lodash': ^4.14.191
       date-fns: ^2.29.3
       isomorphic-fetch: ^3.0.0
+      lodash: ^4.17.21
       nostr-tools: ^1.7.1
       vite: ^4.1.4
       vite-plugin-dts: ^2.0.2
@@ -28,9 +30,11 @@ importers:
     dependencies:
       date-fns: 2.29.3
       isomorphic-fetch: 3.0.0
+      lodash: 4.17.21
       nostr-tools: 1.7.1
     devDependencies:
       '@types/isomorphic-fetch': 0.0.36
+      '@types/lodash': 4.14.191
       vite: 4.1.4
       vite-plugin-dts: 2.0.2_vite@4.1.4
       vitest: 0.29.1
@@ -747,6 +751,10 @@ packages:
     resolution: {integrity: sha512-ulw4d+vW1HKn4oErSmNN2HYEcHGq0N1C5exlrMM0CRqX1UUpFhGb5lwiom5j9KN3LBJJDLRmYIZz1ghm7FIzZw==}
     dev: true
 
+  /@types/lodash/4.14.191:
+    resolution: {integrity: sha512-BdZ5BCCvho3EIXw6wUCXHe7rS53AIDPLE+JzwgT+OsJk53oBfbSmZZ7CX4VaRoN78N+TJpFi9QPlfIVNmJYWxQ==}
+    dev: true
+
   /@types/node/18.14.2:
     resolution: {integrity: sha512-1uEQxww3DaghA0RxqHx0O0ppVlo43pJhepY51OxuQIKHpjbnYLA7vcdwioNPzIqmC2u3I/dmylcqjlh0e7AyUA==}
     dev: true
@@ -1387,7 +1395,6 @@ packages:
 
   /lodash/4.17.21:
     resolution: {integrity: sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==}
-    dev: true
 
   /loose-envify/1.4.0:
     resolution: {integrity: sha512-lyuxPGr/Wfhrlem2CL/UcnUc1zcqKAImBDzukY7Y5F/yQiNdko6+fRLevlw1HgMySw7f611UIY408EtxRSoK3Q==}

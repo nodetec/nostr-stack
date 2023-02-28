@@ -1,5 +1,6 @@
 export {
   getProfile,
+  getProfiles,
   setProfile,
   verifyNip05,
   getPublicKeyFromNip05,

@@ -1,5 +1,6 @@
 import fetch from "isomorphic-fetch";
-import { nip19 } from "nostr-tools";
+import { compact, groupBy, mapValues, maxBy } from "lodash";
+import { Event, nip19 } from "nostr-tools";
 import { createEvent, createUserMetadataEvent } from "../event";
 import { createUserMetadataFilter } from "../filters";
 import { Pool } from "../relay";
@@ -8,6 +9,7 @@ export interface UserProfile {
   pubkey: string;
   name: string;
   picture?: string;
+  banner?: string;
   about?: string;
   display_name?: string;
   lud06?: string;
@@ -22,11 +24,22 @@ export const getProfile = async (
   pubkey: string,
   relayPool: Pool
 ): Promise<UserProfile | null> => {
+  if (isNpub(pubkey)) pubkey = decodeNpub(pubkey);
   const filter = createUserMetadataFilter([pubkey]);
-  const res = await relayPool.get(filter);
+  const res = await relayPool.list([filter], { id: "user.profile" });
   if (!res) return null;
-  const data = JSON.parse(res.content);
-  return { ...data, pubkey } as UserProfile;
+  const latest = dedupeProfiles(res)[0];
+  if (!latest) return null;
+  return kind0EventToProfile(latest);
+};
+
+export const getProfiles = async (pubKeys: string[], relayPool: Pool) => {
+  const keys = pubKeys.map((key) => (isNpub(key) ? decodeNpub(key) : key));
+  const filter = createUserMetadataFilter(keys);
+  const res = await relayPool.list([filter], { id: "user.profile" });
+  if (!res) return null;
+  const deduped = compact(dedupeProfiles(res));
+  return deduped.map(kind0EventToProfile);
 };
 
 /**
@@ -75,30 +88,72 @@ type Nip05Response = {
  * Verifies a users nip05 address according the specs laid out in
  * https://github.com/nostr-protocol/nips/blob/master/05.md
  */
-export const verifyNip05 = async (profile: UserProfile) => {
+export const verifyNip05 = async (profile: UserProfile): Promise<boolean> => {
   if (!profile.nip05) return false;
   const [localPart, domain] = profile.nip05.split("@");
   const url = NIP05_FORMAT.replace("<domain>", domain).replace(
     "<local-part>",
     localPart
   );
-  const res = await fetch(url);
-  if (!res.ok) return false;
-  const data = (await res.json()) as Nip05Response;
-  if (!data.names) return false;
-  if (data.names[localPart] !== profile.pubkey) return false;
-  return true;
+
+  try {
+    const res = await fetch(url);
+    if (!res.ok) return false;
+    const data = (await res.json()) as Nip05Response;
+    if (!data.names) return false;
+    if (data.names[localPart] !== profile.pubkey) return false;
+    return true;
+  } catch {
+    return false;
+  }
 };
 
-export const getPublicKeyFromNip05 = async (nip05: string) => {
+export const getPublicKeyFromNip05 = async (
+  nip05: string
+): Promise<string | null> => {
   const [localPart, domain] = nip05.split("@");
   const url = NIP05_FORMAT.replace("<domain>", domain).replace(
     "<local-part>",
-    localPart
+    localPart.toLowerCase()
   );
-  const res = await fetch(url);
-  if (!res.ok) return null;
-  const data = (await res.json()) as Nip05Response;
-  if (!data.names) return null;
-  return data.names[localPart];
+  try {
+    const res = await fetch(url);
+    if (!res.ok) return null;
+    const data = (await res.json()) as Nip05Response;
+    if (!data.names) return null;
+    return data.names[localPart.toLowerCase()];
+  } catch {
+    return null;
+  }
+};
+
+const isNpub = (pk: string) => {
+  try {
+    return nip19.decode(pk).type === "npub";
+  } catch {
+    return false;
+  }
+};
+
+const decodeNpub = (npub: string) => {
+  return nip19.decode(npub).data as string;
+};
+
+/**
+ * It's possible that relays do not have the most up to date profile info.
+ * If we get more than one profile event for a user, we want to use the most
+ * recent one.
+ */
+const dedupeProfiles = (profileEvents: Event[]) => {
+  const mapped = groupBy(profileEvents, "pubkey");
+  const withLatest = mapValues(mapped, (events) =>
+    maxBy(events, (e) => e.created_at)
+  );
+  return Object.values(withLatest);
+};
+
+const kind0EventToProfile = (event: Event) => {
+  if (event.kind !== 0) throw new Error("Invalid event kind");
+  const data = JSON.parse(event.content);
+  return { ...data, pubkey: event.pubkey } as UserProfile;
 };

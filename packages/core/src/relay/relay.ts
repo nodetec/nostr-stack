@@ -12,15 +12,22 @@ export interface Pool {
   connectedRelays: Relay[];
   get: (
     filter: Filter,
-    relays?: string[],
-    subOpts?: SubscriptionOptions
+    subOpts?: SubscriptionOptions,
+    relays?: string[]
   ) => Promise<Event | null>;
+  list: (
+    filters: Filter[],
+    subOpts?: SubscriptionOptions,
+    relays?: string[]
+  ) => Promise<Event[]>;
   publish: (event: Event) => Promise<boolean>;
 }
 
 export const createPool = (relays: string[]): Pool => {
   const _relays: Relay[] = [];
+  const getRelayUrls = () => _relays.map((r) => r.url);
   const pool = new SimplePool();
+
   const ensure = async () => {
     for (const relay of relays) {
       const _relay = await pool.ensureRelay(relay);
@@ -29,10 +36,19 @@ export const createPool = (relays: string[]): Pool => {
   };
   const get = async (
     filter: Filter,
-    relays = _relays.map((r) => r.url),
-    subOpts?: SubscriptionOptions
+    subOpts?: SubscriptionOptions,
+    relays = _relays.map((r) => r.url)
   ) => {
     const res = await pool.get(relays, filter, subOpts);
+    return res;
+  };
+
+  const list = async (
+    filters: Filter[],
+    subOpts?: SubscriptionOptions,
+    relays = getRelayUrls()
+  ) => {
+    const res = await pool.list(relays, filters, subOpts);
     return res;
   };
 
@@ -52,6 +68,7 @@ export const createPool = (relays: string[]): Pool => {
     pool,
     publish,
     get,
+    list,
     get connectedRelays() {
       return _relays;
     },
