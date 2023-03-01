@@ -1,3 +1,4 @@
+import { uniq } from "lodash";
 import {
   type Relay,
   SimplePool,
@@ -6,71 +7,61 @@ import {
   type SubscriptionOptions,
 } from "nostr-tools";
 
-export interface Pool {
-  ensure: () => Promise<void>;
+export class RelayPool {
+  #relayUrls: string[] = [];
   pool: SimplePool;
-  connectedRelays: Relay[];
-  get: (
-    filter: Filter,
-    subOpts?: SubscriptionOptions,
-    relays?: string[]
-  ) => Promise<Event | null>;
-  list: (
-    filters: Filter[],
-    subOpts?: SubscriptionOptions,
-    relays?: string[]
-  ) => Promise<Event[]>;
-  publish: (event: Event) => Promise<boolean>;
-}
 
-export const createPool = (relays: string[]): Pool => {
-  const _relays: Relay[] = [];
-  const getRelayUrls = () => _relays.map((r) => r.url);
-  const pool = new SimplePool();
+  constructor(relayUrls: string[]) {
+    this.#relayUrls = relayUrls;
+    this.pool = new SimplePool();
+  }
 
-  const ensure = async () => {
-    for (const relay of relays) {
-      const _relay = await pool.ensureRelay(relay);
-      _relays.push(_relay);
+  async tryConnectAll() {
+    for (const relayUrl of this.#relayUrls) {
+      const relay = await this.pool.ensureRelay(relayUrl);
     }
-  };
-  const get = async (
+  }
+
+  disconnectAll() {
+    this.pool.close(this.#relayUrls);
+  }
+
+  addRelay(relayUrl: string) {
+    if (this.#relayUrls.includes(relayUrl)) return;
+    this.#relayUrls = uniq([...this.#relayUrls, relayUrl]);
+  }
+
+  addRelays(relayUrls: string[]) {
+    this.#relayUrls = uniq([...this.#relayUrls, ...relayUrls]);
+  }
+
+  async get(
     filter: Filter,
-    subOpts?: SubscriptionOptions,
-    relays = _relays.map((r) => r.url)
-  ) => {
-    const res = await pool.get(relays, filter, subOpts);
+    subOpts?: SubscriptionOptions | undefined,
+    relays?: string[] | undefined
+  ): Promise<Event | null> {
+    const res = await this.pool.get(relays || this.#relayUrls, filter, subOpts);
     return res;
-  };
+  }
 
-  const list = async (
+  async list(
     filters: Filter[],
-    subOpts?: SubscriptionOptions,
-    relays = getRelayUrls()
-  ) => {
-    const res = await pool.list(relays, filters, subOpts);
-    return res;
-  };
-
-  const publish = (event: Event) => {
-    const pub = pool.publish(
-      _relays.map((r) => r.url),
-      event
+    subOpts?: SubscriptionOptions | undefined,
+    relays?: string[] | undefined
+  ): Promise<Event[]> {
+    const res = await this.pool.list(
+      relays || this.#relayUrls,
+      filters,
+      subOpts
     );
+    return res;
+  }
+
+  async publish(event: Event, relays?: string[]): Promise<boolean> {
+    const pub = this.pool.publish(relays ?? this.#relayUrls, event);
     return new Promise<boolean>((resolve, reject) => {
       pub.on("ok", () => resolve(true));
       pub.on("failed", (reason: string) => reject(reason));
     });
-  };
-
-  return {
-    ensure,
-    pool,
-    publish,
-    get,
-    list,
-    get connectedRelays() {
-      return _relays;
-    },
-  };
-};
+  }
+}

@@ -1,9 +1,9 @@
 import fetch from "isomorphic-fetch";
 import { compact, groupBy, mapValues, maxBy } from "lodash";
-import { Event, nip19 } from "nostr-tools";
+import { Event, nip19, Relay } from "nostr-tools";
 import { createEvent, createUserMetadataEvent } from "../event";
 import { createUserMetadataFilter } from "../filters";
-import { Pool } from "../relay";
+import { RelayPool } from "../relay";
 
 export interface UserProfile {
   pubkey: string;
@@ -22,7 +22,7 @@ export interface UserProfile {
  */
 export const getProfile = async (
   pubkey: string,
-  relayPool: Pool
+  relayPool: RelayPool
 ): Promise<UserProfile | null> => {
   if (isNpub(pubkey)) pubkey = decodeNpub(pubkey);
   const filter = createUserMetadataFilter([pubkey]);
@@ -33,7 +33,7 @@ export const getProfile = async (
   return kind0EventToProfile(latest);
 };
 
-export const getProfiles = async (pubKeys: string[], relayPool: Pool) => {
+export const getProfiles = async (pubKeys: string[], relayPool: RelayPool) => {
   const keys = pubKeys.map((key) => (isNpub(key) ? decodeNpub(key) : key));
   const filter = createUserMetadataFilter(keys);
   const res = await relayPool.list([filter], { id: "user.profile" });
@@ -48,10 +48,9 @@ export const getProfiles = async (pubKeys: string[], relayPool: Pool) => {
 export const setProfile = async (
   profile: UserProfile,
   sk: string,
-  relayPool: Pool
+  relayPool: RelayPool
 ) => {
   const event = createEvent(createUserMetadataEvent(profile), sk);
-  await relayPool.ensure();
   const success = await relayPool.publish(event);
   if (!success) throw new Error("Failed to publish event");
   return true;
@@ -60,7 +59,10 @@ export const setProfile = async (
 /**
  * Look up a users profile by their nip05 address
  */
-export const getProfileFromNip05 = async (nip05: string, relayPool: Pool) => {
+export const getProfileFromNip05 = async (
+  nip05: string,
+  relayPool: RelayPool
+) => {
   const pubkey = await getPublicKeyFromNip05(nip05);
   if (!pubkey) return null;
   return getProfile(pubkey, relayPool);
@@ -73,7 +75,9 @@ export const getProfileFromNip05 = async (nip05: string, relayPool: Pool) => {
 export const toDisplayProfile = (profile: UserProfile) => {
   return {
     ...profile,
-    pubkey: nip19.npubEncode(profile.pubkey),
+    pubkey: isNpub(profile.pubkey)
+      ? profile.pubkey
+      : nip19.npubEncode(profile.pubkey),
   };
 };
 

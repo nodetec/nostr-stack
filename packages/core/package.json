@@ -7,13 +7,13 @@
   "files": [
     "dist"
   ],
-  "main": "dist/core.umd.cjs",
+  "main": "dist/core.cjs",
   "module": "dist/core.js",
   "typings": "dist/index.d.ts",
   "exports": {
     ".": {
       "import": "./dist/core.js",
-      "require": "./dist/core.umd.cjs"
+      "require": "./dist/core.cjs"
     }
   },
   "scripts": {

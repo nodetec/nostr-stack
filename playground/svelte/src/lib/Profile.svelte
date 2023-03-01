@@ -1,14 +1,13 @@
 <script lang="ts">
   import { relay, user } from "@nostr-stack/core";
-  import { onMount } from "svelte";
 
-  const pool = relay.createPool(["wss://eden.nostr.land", "wss://nostr.wine"]);
+  const pool = new relay.RelayPool([
+    "wss://eden.nostr.land",
+    "wss://nostr.wine",
+  ]);
   let profile: user.UserProfile | null;
   let nip05 = "";
   let npub = "";
-  onMount(async () => {
-    await pool.ensure();
-  });
   $: displayProfile = profile ? user.toDisplayProfile(profile) : null;
 </script>
 

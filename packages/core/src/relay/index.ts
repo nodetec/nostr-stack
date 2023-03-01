@@ -1,1 +1,2 @@
-export { createPool, type Pool } from "./relay";
+export { RelayPool } from "./relay";
+export type { Relay } from "nostr-tools";

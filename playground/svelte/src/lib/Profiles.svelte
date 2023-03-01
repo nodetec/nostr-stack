@@ -2,7 +2,7 @@
   import { relay, user } from "@nostr-stack/core";
   import { onMount } from "svelte";
 
-  const pool = relay.createPool([
+  const pool = new relay.RelayPool([
     "wss://eden.nostr.land",
     "wss://nostr.wine",
     "wss://nos.lol",
@@ -12,10 +12,6 @@
   let buttonDisabled = false;
   $: nip05s = input.split(", ");
   $: displayProfiles = profiles.map((p) => user.toDisplayProfile(p));
-
-  onMount(async () => {
-    await pool.ensure();
-  });
 
   const getPubKeys = async () => {
     return (await (
