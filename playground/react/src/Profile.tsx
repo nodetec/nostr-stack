@@ -1,6 +1,6 @@
 import { useProfile } from "@nostr-stack/react";
 export const Profile = () => {
-  const profile = useProfile(
+  const { profile } = useProfile(
     "npub1rach342hnt3wa0qfqk0pey0exs2drcxfc0azs8eurwnee9vu64vs834atg",
     { cache: true, persist: true }
   );

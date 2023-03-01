@@ -1,6 +1,6 @@
 import fetch from "isomorphic-fetch";
 import { compact, groupBy, mapValues, maxBy } from "lodash";
-import { Event, nip19, Relay } from "nostr-tools";
+import { Event, EventTemplate, nip19, Relay } from "nostr-tools";
 import { createEvent, createUserMetadataEvent } from "../event";
 import { createUserMetadataFilter } from "../filters";
 import { RelayPool } from "../relay";

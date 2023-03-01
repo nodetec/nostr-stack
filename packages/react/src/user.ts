@@ -1,4 +1,4 @@
-import { user } from "@nostr-stack/core";
+import { user, NostrExtension, event } from "@nostr-stack/core";
 import { atom, useAtom } from "jotai";
 import { compact } from "lodash";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -43,15 +43,19 @@ type Options = {
   persist?: boolean;
 };
 
-export const useProfile = (
-  pubkey: string,
-  opts?: Options
-): user.UserProfile => {
+export const useProfile = (pubkey: string, opts?: Options) => {
   const cache = useProfileCache(opts?.persist);
   const relays = useRelays();
   const [profile, setProfile] = useState<user.UserProfile>(() =>
     user.toDisplayProfile({ pubkey, name: "" })
   );
+
+  // This will not propagate to the network
+  // Just updates the local cache and state value
+  const updateProfile = (profile: user.UserProfile) => {
+    if (opts?.cache) cache.set(pubkey, profile);
+    setProfile(profile);
+  };
 
   useEffect(() => {
     if (cache.get(pubkey)) {
@@ -66,7 +70,10 @@ export const useProfile = (
     });
   }, [relays.pool, pubkey]);
 
-  return profile;
+  return {
+    profile,
+    updateProfile,
+  };
 };
 
 export const useProfiles = (
@@ -108,4 +115,39 @@ export const useProfiles = (
   return profiles;
 };
 
-export type UserSettings = user.UserProfile;
+interface CurrentUser {
+  profile: user.UserProfile;
+  setProfile: (profile: user.UserProfile) => void;
+}
+export const useCurrentUser = (pk?: string, sk?: string) => {
+  const [pubkey, setPubkey] = useState<string | undefined>(pk);
+  useEffect(() => {
+    if (pk) return;
+    const pubkey = getPubkeyFromExtension().then((pk) => {
+      if (!pk) return;
+      setPubkey(pk);
+    });
+  }, []);
+
+  return {
+    pubkey,
+  };
+};
+
+declare global {
+  interface Window {
+    nostr?: NostrExtension;
+  }
+}
+
+export const getPubkeyFromExtension = () => {
+  if (typeof window === "undefined") return Promise.resolve(null);
+  if (!window.nostr) return Promise.resolve(null);
+  return window.nostr.getPublicKey();
+};
+
+const getExtensionSigner = () => {
+  if (typeof window === "undefined") return null;
+  if (!window.nostr) return null;
+  return window.nostr.signEvent;
+};
