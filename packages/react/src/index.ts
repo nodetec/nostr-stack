@@ -1,7 +1,3 @@
 export { useRelays, useRelay, RelayProvider } from "./relay";
-export {
-  useProfile,
-  useProfiles,
-  useCurrentUser,
-  getPubkeyFromExtension,
-} from "./user";
+export { useProfile, useProfiles } from "./user";
+export { useNip07Extension } from "./extensions";

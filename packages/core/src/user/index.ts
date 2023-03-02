@@ -6,5 +6,6 @@ export {
   getPublicKeyFromNip05,
   getProfileFromNip05,
   toDisplayProfile,
+  toDisplayPubkey,
   type UserProfile,
 } from "./profile";

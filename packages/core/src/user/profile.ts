@@ -1,7 +1,7 @@
 import fetch from "isomorphic-fetch";
 import { compact, groupBy, mapValues, maxBy } from "lodash";
 import { Event, EventTemplate, nip19, Relay } from "nostr-tools";
-import { createEvent, createUserMetadataEvent } from "../event";
+import { kind0 } from "../event";
 import { createUserMetadataFilter } from "../filters";
 import { RelayPool } from "../relay";
 
@@ -47,11 +47,12 @@ export const getProfiles = async (pubKeys: string[], relayPool: RelayPool) => {
  */
 export const setProfile = async (
   profile: UserProfile,
-  sk: string,
+  sign: (event: EventTemplate) => Promise<Event>,
   relayPool: RelayPool
 ) => {
-  const event = createEvent(createUserMetadataEvent(profile), sk);
-  const success = await relayPool.publish(event);
+  const event = kind0.base({ userProfile: profile });
+  const signed = await sign(event);
+  const success = await relayPool.publish(signed);
   if (!success) throw new Error("Failed to publish event");
   return true;
 };
@@ -79,6 +80,11 @@ export const toDisplayProfile = (profile: UserProfile) => {
       ? profile.pubkey
       : nip19.npubEncode(profile.pubkey),
   };
+};
+
+export const toDisplayPubkey = (pubkey: string) => {
+  if (isNpub(pubkey)) return pubkey;
+  return nip19.npubEncode(pubkey);
 };
 
 const NIP05_FORMAT =

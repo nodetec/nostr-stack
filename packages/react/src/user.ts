@@ -1,4 +1,4 @@
-import { user, NostrExtension, event } from "@nostr-stack/core";
+import { user } from "@nostr-stack/core";
 import { atom, useAtom } from "jotai";
 import { compact } from "lodash";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -113,41 +113,4 @@ export const useProfiles = (
   }, [relays.pool, pubkeys]);
 
   return profiles;
-};
-
-interface CurrentUser {
-  profile: user.UserProfile;
-  setProfile: (profile: user.UserProfile) => void;
-}
-export const useCurrentUser = (pk?: string, sk?: string) => {
-  const [pubkey, setPubkey] = useState<string | undefined>(pk);
-  useEffect(() => {
-    if (pk) return;
-    const pubkey = getPubkeyFromExtension().then((pk) => {
-      if (!pk) return;
-      setPubkey(pk);
-    });
-  }, []);
-
-  return {
-    pubkey,
-  };
-};
-
-declare global {
-  interface Window {
-    nostr?: NostrExtension;
-  }
-}
-
-export const getPubkeyFromExtension = () => {
-  if (typeof window === "undefined") return Promise.resolve(null);
-  if (!window.nostr) return Promise.resolve(null);
-  return window.nostr.getPublicKey();
-};
-
-const getExtensionSigner = () => {
-  if (typeof window === "undefined") return null;
-  if (!window.nostr) return null;
-  return window.nostr.signEvent;
 };
