@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import Input from "./Input";
 
 const meta = {
-  title: "Input",
+  title: "Atoms/Input",
   component: Input,
 
   //👇 Enables auto-generated documentation for the component story

@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import Toggle from "./Toggle";
 
 const meta = {
-  title: "Toggle",
+  title: "Atoms/Toggle",
   component: Toggle,
 
   //👇 Enables auto-generated documentation for the component story
