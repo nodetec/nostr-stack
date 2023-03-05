@@ -20,13 +20,13 @@ type Story = StoryObj<typeof meta>;
 export const Primary: Story = {
   args: {
     onChange: (value) => console.log(`Toggle is ${value ? "on" : "off"}`),
-    state: true,
+    initialState: true,
   },
 };
 
 export const Secondary: Story = {
   args: {
     ...Primary.args,
-    state: false,
+    initialState: false,
   },
 };
