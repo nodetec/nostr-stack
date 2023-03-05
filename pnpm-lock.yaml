@@ -132,6 +132,7 @@ importers:
     specifiers:
       '@nostr-stack/core': workspace:*
       '@nostr-stack/react': workspace:*
+      '@nostr-stack/ui': workspace:*
       '@types/lodash': ^4.14.191
       '@types/react': ^18.0.27
       '@types/react-dom': ^18.0.10
@@ -143,6 +144,7 @@ importers:
     dependencies:
       '@nostr-stack/core': link:../../packages/core
       '@nostr-stack/react': link:../../packages/react
+      '@nostr-stack/ui': link:../../packages/ui
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
     devDependencies:

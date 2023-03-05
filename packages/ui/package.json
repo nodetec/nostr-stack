@@ -1,8 +1,21 @@
 {
-  "name": "ui",
+  "name": "@nostr-stack/ui",
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "files": [
+    "dist"
+  ],
+  "main": "dist/ui.cjs",
+  "module": "dist/ui.js",
+  "typings": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/ui.js",
+      "require": "./dist/ui.cjs"
+    },
+    "./style.css": "./dist/style.css"
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",

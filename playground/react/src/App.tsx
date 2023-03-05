@@ -1,3 +1,4 @@
+import "@nostr-stack/ui/style.css";
 import { useRelays } from "@nostr-stack/react";
 import { Profile } from "./Profile";
 import { Profiles } from "./Profiles";
@@ -8,9 +9,9 @@ function App() {
   return (
     <div>
       <h2>Playground</h2>
-      {/* <Profile /> */}
+      <Profile />
       {/* <Profiles /> */}
-      <Extension />
+      {/* <Extension /> */}
     </div>
   );
 }
