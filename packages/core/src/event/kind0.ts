@@ -10,6 +10,6 @@ export const base = ({ userProfile }: BaseParams): EventTemplate => {
     kind: 0,
     content: JSON.stringify(omit(userProfile, "pubkey")),
     tags: [],
-    created_at: Date.now(),
+    created_at: Math.floor(Date.now() / 1000),
   };
 };

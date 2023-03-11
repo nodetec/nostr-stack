@@ -2,7 +2,7 @@ import fetch from "isomorphic-fetch";
 import { compact, groupBy, mapValues, maxBy } from "lodash";
 import { Event, EventTemplate, nip19, Relay } from "nostr-tools";
 import { kind0 } from "../event";
-import { createUserMetadataFilter } from "../filters";
+import { Filter } from "nostr-tools";
 import { RelayPool } from "../relay";
 
 export interface UserProfile {
@@ -15,6 +15,13 @@ export interface UserProfile {
   lud06?: string;
   nip05?: string;
 }
+
+export const createUserMetadataFilter = (ids: string[]): Filter => {
+  return {
+    kinds: [0],
+    authors: ids,
+  };
+};
 
 /**
  * Ask all relays in pool for metadata about a user

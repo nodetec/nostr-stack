@@ -26,13 +26,19 @@
   },
   "dependencies": {
     "@headlessui/react": "^1.7.12",
+    "@nostr-stack/core": "workspace:*",
     "@tailwindcss/forms": "^0.5.3",
+    "@tailwindcss/typography": "^0.5.9",
     "class-variance-authority": "^0.4.0",
+    "date-fns": "^2.29.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-icons": "^4.8.0"
+    "react-icons": "^4.8.0",
+    "react-markdown": "^8.0.5",
+    "remark-linkify-regex": "^1.2.1"
   },
   "devDependencies": {
+    "@nostr-stack/react": "workspace:*",
     "@storybook/addon-essentials": "^7.0.0-beta.60",
     "@storybook/addon-interactions": "^7.0.0-beta.60",
     "@storybook/addon-links": "^7.0.0-beta.60",
@@ -45,6 +51,7 @@
     "@types/react-dom": "^18.0.10",
     "@vitejs/plugin-react": "^3.1.0",
     "autoprefixer": "^10.4.13",
+    "nostr-tools": "^1.7.1",
     "postcss": "^8.4.21",
     "prop-types": "^15.8.1",
     "storybook": "^7.0.0-beta.60",

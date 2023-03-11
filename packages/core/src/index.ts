@@ -1,6 +1,7 @@
 export * as relay from "./relay";
 export * as user from "./user";
 export * as event from "./event";
+export * as feed from "./feed";
 export type { UserProfile } from "./user";
 export type { RelayPool } from "./relay";
 export type {

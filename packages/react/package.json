@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "build": "vite build",
-    "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx}\""
+    "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx}\"",
+    "dev": "vite build -w"
   },
   "files": [
     "dist"
@@ -26,8 +27,8 @@
   "dependencies": {
     "@nostr-stack/core": "workspace:*",
     "@preact/signals-react": "^1.2.2",
-    "jotai": "^2.0.2",
     "lodash": "^4.17.21",
+    "use-constant": "^1.1.1",
     "vitest": "^0.29.1"
   },
   "devDependencies": {

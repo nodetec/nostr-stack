@@ -19,9 +19,9 @@ const Avatar = ({ imgUrl, size = "md", onClick }: Props) => {
     );
   }
   return (
-    <span className={`${classes} overflow-hidden bg-gray-100`}>
+    <span className={`${classes} overflow-hidden dark:bg-gray-100 bg-gray-200`}>
       <svg
-        className="h-full w-full text-gray-300"
+        className="h-full w-full dark:text-gray-300 text-gray-500"
         fill="currentColor"
         viewBox="0 0 24 24"
       >

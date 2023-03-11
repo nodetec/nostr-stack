@@ -13,7 +13,8 @@
     "@nostr-stack/react": "workspace:*",
     "@nostr-stack/ui": "workspace:*",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "wouter": "^2.10.0"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.191",

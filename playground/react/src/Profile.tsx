@@ -1,9 +1,8 @@
-import { useProfile } from "@nostr-stack/react";
+import { useProfile, useRelays } from "@nostr-stack/react";
 import { ProfilePreview } from "@nostr-stack/ui";
 export const Profile = () => {
   const { profile } = useProfile(
-    "npub1rach342hnt3wa0qfqk0pey0exs2drcxfc0azs8eurwnee9vu64vs834atg",
-    { cache: true, persist: true }
+    "npub1rach342hnt3wa0qfqk0pey0exs2drcxfc0azs8eurwnee9vu64vs834atg"
   );
   if (!profile) return <div>Loading...</div>;
   return (

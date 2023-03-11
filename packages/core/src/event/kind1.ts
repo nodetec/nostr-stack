@@ -48,5 +48,3 @@ export const reply = ({
     tags: [...eventsTags, ...threadedKeysTags],
   };
 };
-
-// 1a50a4268a9c4561a9abbf3fee828e150ce49617a82e56f28737f4e05146544c
